@@ -1,25 +1,31 @@
 pipeline {
     agent any
     stages {
-        stage('Build') { 
-            steps { 
-                bat 'docker build -t app-dev .' 
-            } 
+        stage('Clean Old Container') {
+            steps {
+                // Try to remove old container if it exists to make room for new one
+                bat 'docker rm -f dev-app || exit 0'
+            }
         }
-        stage('Run') { 
-            steps { 
-                bat 'docker run -d -p 8083:80 --name dev-app app-dev' 
-            } 
+        stage('Build') {
+            steps {
+                withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'URL'), 
+                                 string(credentialsId: 'SUPABASE_KEY', variable: 'KEY')]) {
+                    bat 'echo VITE_SUPABASE_URL=%URL% > .env'
+                    bat 'echo VITE_SUPABASE_ANON_KEY=%KEY% >> .env'
+                }
+                bat 'docker build -t app-dev .'
+            }
         }
-        stage('Test') { 
-            steps { 
-                bat 'smoke_test.bat' 
-            } 
+        stage('Run') {
+            steps {
+                bat 'docker run -d -p 8083:80 --name dev-app app-dev'
+            }
         }
-    }
-    post { 
-        always { 
-            bat 'docker rm -f dev-app' 
-        } 
+        stage('Test') {
+            steps {
+                bat 'smoke_test.bat'
+            }
+        }
     }
 }

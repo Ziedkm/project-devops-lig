@@ -1,9 +1,35 @@
 pipeline {
     agent any
     stages {
-        stage('Build') { steps { bat 'docker build -t app-pr .' } }
-        stage('Run') { steps { bat 'docker run -d -p 8082:80 --name pr-app app-pr' } }
-        stage('Test') { steps { bat 'smoke_test.bat' } }
+        stage('Build') {
+            steps {
+                // This block injects the secrets into variables URL and KEY
+                withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'URL'), 
+                                 string(credentialsId: 'SUPABASE_KEY', variable: 'KEY')]) {
+                    
+                    // Create the .env file using Windows batch commands
+                    bat 'echo VITE_SUPABASE_URL=%URL% > .env'
+                    bat 'echo VITE_SUPABASE_ANON_KEY=%KEY% >> .env'
+                }
+                
+                // Now build the image (it will find the .env file now)
+                bat 'docker build -t app-pr .'
+            }
+        }
+        stage('Run') {
+            steps {
+                bat 'docker run -d -p 8082:80 --name pr-app app-pr'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'smoke_test.bat'
+            }
+        }
     }
-    post { always { bat 'docker rm -f pr-app' } }
+    post {
+        always {
+            bat 'docker rm -f pr-app'
+        }
+    }
 }
