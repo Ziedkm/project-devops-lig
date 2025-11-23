@@ -10,8 +10,9 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'URL'), 
                                  string(credentialsId: 'SUPABASE_KEY', variable: 'KEY')]) {
-                    // ONLY run this ONE command. Delete the other one.
-                    bat 'docker build --build-arg VITE_SUPABASE_URL="%URL%" --build-arg VITE_SUPABASE_ANON_KEY="%KEY%" -t app-dev .'
+                    bat """
+                docker build --no-cache --build-arg VITE_SUPABASE_URL="%URL%" --build-arg VITE_SUPABASE_ANON_KEY="%KEY%" -t app-dev .
+            """
                 }
                 // DELETE THIS LINE: bat 'docker build -t app-dev .'  <-- This was re-building it empty!
             }

@@ -6,7 +6,9 @@ pipeline {
                 withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'URL'), 
                                  string(credentialsId: 'SUPABASE_KEY', variable: 'KEY')]) {
                     // ONLY run this ONE command.
-                    bat 'docker build --build-arg VITE_SUPABASE_URL="%URL%" --build-arg VITE_SUPABASE_ANON_KEY="%KEY%" -t app-pr .'
+                    bat """
+                docker build --no-cache --build-arg VITE_SUPABASE_URL="%URL%" --build-arg VITE_SUPABASE_ANON_KEY="%KEY%" -t app-pr .
+            """
                 }
                 // DELETE THIS LINE: bat 'docker build -t app-pr .' <-- This was overwriting your good build!
             }
