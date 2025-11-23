@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') { steps { bat 'docker build -t app-pr .' } }
         stage('Run') { steps { bat 'docker run -d -p 8082:80 --name pr-app app-pr' } }
-        stage('Test') { steps { bat 'bash ./smoke_test.bat' } }
+        stage('Test') { steps { bat 'smoke_test.bat' } }
     }
     post { always { bat 'docker rm -f pr-app' } }
 }
