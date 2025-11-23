@@ -1,9 +1,25 @@
 pipeline {
     agent any
     stages {
-        stage('Build') { steps { sh 'docker build -t app-dev .' } }
-        stage('Run') { steps { sh 'docker run -d -p 8083:80 --name dev-app app-dev' } }
-        stage('Test') { steps { sh 'bash ./smoke_test.sh' } }
+        stage('Build') { 
+            steps { 
+                bat 'docker build -t app-dev .' 
+            } 
+        }
+        stage('Run') { 
+            steps { 
+                bat 'docker run -d -p 8083:80 --name dev-app app-dev' 
+            } 
+        }
+        stage('Test') { 
+            steps { 
+                bat 'smoke_test.bat' 
+            } 
+        }
     }
-    post { always { sh 'docker rm -f dev-app' } }
+    post { 
+        always { 
+            bat 'docker rm -f dev-app' 
+        } 
+    }
 }

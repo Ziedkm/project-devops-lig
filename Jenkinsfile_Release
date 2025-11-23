@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Build') { steps { sh 'npm install && npm run build' } }
+        stage('Build') { steps { bat 'npm install && npm run build' } }
         stage('Archive') { 
             steps { 
                 // Archive the build folder (dist or build)
