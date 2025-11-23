@@ -3,7 +3,6 @@ pipeline {
     stages {
         stage('Clean Old Container') {
             steps {
-                // Try to remove old container if it exists to make room for new one
                 bat 'docker rm -f dev-app || exit 0'
             }
         }
@@ -11,9 +10,10 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'URL'), 
                                  string(credentialsId: 'SUPABASE_KEY', variable: 'KEY')]) {
-                    bat 'docker build --build-arg VITE_SUPABASE_URL=\"%URL%\" --build-arg VITE_SUPABASE_ANON_KEY=\"%KEY%\" -t app-dev .'
+                    // ONLY run this ONE command. Delete the other one.
+                    bat 'docker build --build-arg VITE_SUPABASE_URL="%URL%" --build-arg VITE_SUPABASE_ANON_KEY="%KEY%" -t app-dev .'
                 }
-                bat 'docker build -t app-dev .'
+                // DELETE THIS LINE: bat 'docker build -t app-dev .'  <-- This was re-building it empty!
             }
         }
         stage('Run') {
