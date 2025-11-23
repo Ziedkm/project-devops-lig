@@ -7,9 +7,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'URL'), 
                                  string(credentialsId: 'SUPABASE_KEY', variable: 'KEY')]) {
                     
-                    // Create the .env file using Windows batch commands
-                    bat 'echo VITE_SUPABASE_URL=%URL% > .env'
-                    bat 'echo VITE_SUPABASE_ANON_KEY=%KEY% >> .env'
+                    bat 'docker build --build-arg VITE_SUPABASE_URL="%URL%" --build-arg VITE_SUPABASE_ANON_KEY="%KEY%" -t app-pr .'
                 }
                 
                 // Now build the image (it will find the .env file now)
