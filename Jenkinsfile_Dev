@@ -11,7 +11,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'), 
                                  string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')]) {
                     bat """
-                docker build --no-cache --build-arg VITE_SUPABASE_URL="${URL}" --build-arg VITE_SUPABASE_ANON_KEY="${KEY}" -t app-dev .
+                docker build --no-cache --build-arg VITE_SUPABASE_URL="${SUPA_URL}" --build-arg VITE_SUPABASE_ANON_KEY="${SUPA_KEY}" -t app-dev .
             """
                 }
                 // DELETE THIS LINE: bat 'docker build -t app-dev .'  <-- This was re-building it empty!
