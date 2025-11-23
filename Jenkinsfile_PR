@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'URL'), 
-                                 string(credentialsId: 'SUPABASE_KEY', variable: 'KEY')]) {
+                withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'), 
+                                 string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')]) {
                     // ONLY run this ONE command.
                     bat """
                 docker build --no-cache --build-arg VITE_SUPABASE_URL="${URL}" --build-arg VITE_SUPABASE_ANON_KEY="${KEY}" -t app-pr .
