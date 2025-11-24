@@ -20,7 +20,10 @@ pipeline {
                     bat 'if exist .env (echo .env file exists) else (echo .env file NOT FOUND)'
                     bat 'type .env'
                     // 2. Build the image (No arguments needed!)
-                    bat 'docker build --no-cache -t app-dev .'
+                    docker build --no-cache -t app-dev ^
+                    --build-arg VITE_SUPABASE_URL=%SUPA_URL% ^
+                    --build-arg VITE_SUPABASE_ANON_KEY=%SUPA_KEY% .
+
                 }
             }
         }
