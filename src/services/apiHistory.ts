@@ -1,5 +1,6 @@
 // src/services/apiHistory.ts
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 
 export interface HistoryLog {
   history_id: string;

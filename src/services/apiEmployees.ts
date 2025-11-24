@@ -1,6 +1,7 @@
 // src/services/apiEmployees.ts
 import { createClient } from '@supabase/supabase-js';
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 
 // Création d'un client admin SÉCURISÉ. Ne l'utilise QUE pour les opérations admin.
 const supabaseAdmin = createClient(

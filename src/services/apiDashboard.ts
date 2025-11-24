@@ -1,5 +1,6 @@
 // src/services/apiDashboard.ts
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 import { getActiveMission } from './apiMissions';
 import { eachDayOfInterval, isWeekend, isSameDay, parseISO, getMonth, getYear, isWithinInterval } from 'date-fns';
 

@@ -6,7 +6,8 @@ import { Box, TextField, Button, Typography, Paper, CircularProgress } from '@mu
 import { motion } from 'framer-motion';
 
 // --- NOS IMPORTS DE LOGIQUE ---
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 

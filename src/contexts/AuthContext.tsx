@@ -1,6 +1,7 @@
 // src/contexts/AuthContext.tsx
 import React, { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 import type { Session, User } from '@supabase/supabase-js';
 
 interface EmployeeProfile {

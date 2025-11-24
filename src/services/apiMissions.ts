@@ -1,5 +1,6 @@
 // src/services/apiMissions.ts
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 import { eachDayOfInterval, isWeekend, isSameDay, parseISO, getYear, isWithinInterval } from 'date-fns';
 
 // --- DÉFINITION DES TYPES ---

@@ -1,4 +1,5 @@
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 
 // Define the shape of the data we need to send to the function
 interface SyncHolidaysPayload {

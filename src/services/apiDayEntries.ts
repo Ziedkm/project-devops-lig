@@ -1,5 +1,6 @@
 // src/services/apiDayEntries.ts
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 
 /**
  * Récupère toutes les entrées de jours pour une mission donnée.

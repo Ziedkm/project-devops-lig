@@ -3,7 +3,8 @@
 import { type CSSProperties } from 'react'; // Removed unused useState
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '../hooks/useUser';
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 import { 
   LayoutDashboard, Calendar, Target, Settings, LogOut, Users, History,
   ChevronLeft, Menu, Shield,

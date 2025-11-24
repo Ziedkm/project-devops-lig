@@ -1,7 +1,8 @@
 // src/hooks/useRealtime.ts
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../config/supabaseClient';
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase();
 
 export function useRealtime() {
   const queryClient = useQueryClient();

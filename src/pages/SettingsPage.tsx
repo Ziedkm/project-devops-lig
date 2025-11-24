@@ -2,7 +2,8 @@ import { Box, Button, Typography, Paper } from '@mui/material';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { useUser } from '../hooks/useUser'; // To get the logged-in user's ID
-import { supabase } from '../config/supabaseClient'; // Assuming you have a supabase client setup
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase(); // Assuming you have a supabase client setup
 
 import { syncPublicHolidays } from '../services/apiSettings';
 

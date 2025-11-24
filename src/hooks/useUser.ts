@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../config/supabaseClient'; // Adjust path if needed
+import { getSupabase } from '../config/supabaseClient';
+const supabase = getSupabase(); // Adjust path if needed
 
 const fetchUserAndProfile = async () => {
   // 1. Get the current session
