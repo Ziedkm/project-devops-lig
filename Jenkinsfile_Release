@@ -1,25 +1,30 @@
 pipeline {
     agent any
+
     stages {
+
         stage('Build') {
             steps {
-                withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'), 
-                                 string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')]) {
-                    
-                    // Create .env file for Vite to use
-                    powershell """
-                        Set-Content -Path .env -Value "VITE_SUPABASE_URL=${SUPA_URL}"
-                        Add-Content -Path .env -Value "VITE_SUPABASE_ANON_KEY=${SUPA_KEY}"
+                withCredentials([
+                    string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'),
+                    string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')
+                ]) {
+
+                    // Generate production env file
+                    bat """
+                    echo VITE_SUPABASE_URL=%SUPA_URL% > .env.production
+                    echo VITE_SUPABASE_ANON_KEY=%SUPA_KEY% >> .env.production
                     """
-                    
-                    // Build the project
-                    bat 'npm install && npm run build'
+
+                    // Local build for archiving to artifacts
+                    bat 'npm install'
+                    bat 'npm run build'
                 }
             }
         }
+
         stage('Archive') { 
             steps { 
-                // Archive the build folder (dist or build)
                 archiveArtifacts artifacts: 'dist/**/*', fingerprint: true 
             } 
         }
