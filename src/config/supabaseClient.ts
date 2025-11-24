@@ -1,13 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 
-// nRécupériw les variables dTA3 el envirment 
+// Load variables from Vite env
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// nthabtou les variables mrgline
+// Vérification claire pour Docker / Jenkins
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Supabase URL or Anon Key is missing from .env.local file");
+  console.error(" [Supabase] Les variables VITE_SUPABASE_URL ou VITE_SUPABASE_ANON_KEY ne sont pas définies.")
+  console.error(" Vérifie ton Dockerfile + Jenkinsfile (build-arg)")
+  throw new Error("Supabase configuration missing.");
 }
 
-// Créeation et export taa l client Supabase
+// Create and export client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
