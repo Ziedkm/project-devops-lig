@@ -4,6 +4,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+# DEBUG: Check if .env file was copied
+RUN ls -la .env || echo ".env file NOT FOUND in Docker"
+RUN cat .env || echo "Cannot read .env"
 RUN npm run build
 
 
