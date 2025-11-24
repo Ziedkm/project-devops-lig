@@ -12,9 +12,11 @@ pipeline {
                         Add-Content -Path .env -Value "VITE_SUPABASE_ANON_KEY=${SUPA_KEY}"
                     """
                     
+                    bat """
                     docker build --no-cache -t app-pr ^
-                    --build-arg VITE_SUPABASE_URL=%SUPA_URL% ^
-                    --build-arg VITE_SUPABASE_ANON_KEY=%SUPA_KEY% .
+                        --build-arg VITE_SUPABASE_URL=%SUPA_URL% ^
+                        --build-arg VITE_SUPABASE_ANON_KEY=%SUPA_KEY% .
+                    """
 
                 }
             }

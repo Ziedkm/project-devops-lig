@@ -1,37 +1,36 @@
 pipeline {
     agent any
+
     stages {
+
         stage('Clean Old Container') {
             steps {
                 bat 'docker rm -f dev-app || exit 0'
             }
         }
+
         stage('Build') {
             steps {
-                withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'), 
-                                string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')]) {
-                    
-                    // 1. Create the .env file automatically using the secrets
-                    powershell """
-                        Set-Content -Path .env -Value "VITE_SUPABASE_URL=${SUPA_URL}"
-                        Add-Content -Path .env -Value "VITE_SUPABASE_ANON_KEY=${SUPA_KEY}"
-                    """
-                    // DEBUG: Check if file exists and show its content (without revealing the key)
-                    bat 'if exist .env (echo .env file exists) else (echo .env file NOT FOUND)'
-                    bat 'type .env'
-                    // 2. Build the image (No arguments needed!)
-                    docker build --no-cache -t app-dev ^
-                    --build-arg VITE_SUPABASE_URL=%SUPA_URL% ^
-                    --build-arg VITE_SUPABASE_ANON_KEY=%SUPA_KEY% .
+                withCredentials([
+                    string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'),
+                    string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')
+                ]) {
 
+                    bat """
+                    docker build --no-cache -t app-dev ^
+                        --build-arg VITE_SUPABASE_URL=%SUPA_URL% ^
+                        --build-arg VITE_SUPABASE_ANON_KEY=%SUPA_KEY% .
+                    """
                 }
             }
         }
+
         stage('Run') {
             steps {
                 bat 'docker run -d -p 8083:80 --name dev-app app-dev'
             }
         }
+
         stage('Test') {
             steps {
                 bat 'smoke_test.bat'
