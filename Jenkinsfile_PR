@@ -5,12 +5,16 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'), 
                                  string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')]) {
-                    // ONLY run this ONE command.
-                    bat """
-                docker build --no-cache --build-arg VITE_SUPABASE_URL="${SUPA_URL}" --build-arg VITE_SUPABASE_ANON_KEY="${SUPA_KEY}" -t app-pr .
-            """
+                    
+                    // Create .env file
+                    powershell """
+                        Set-Content -Path .env -Value "VITE_SUPABASE_URL=${SUPA_URL}"
+                        Add-Content -Path .env -Value "VITE_SUPABASE_ANON_KEY=${SUPA_KEY}"
+                    """
+                    
+                    // Build Docker image
+                    bat 'docker build --no-cache -t app-pr .'
                 }
-                // DELETE THIS LINE: bat 'docker build -t app-pr .' <-- This was overwriting your good build!
             }
         }
         stage('Run') {
