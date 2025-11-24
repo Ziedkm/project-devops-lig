@@ -16,7 +16,9 @@ pipeline {
                         Set-Content -Path .env -Value "VITE_SUPABASE_URL=${SUPA_URL}"
                         Add-Content -Path .env -Value "VITE_SUPABASE_ANON_KEY=${SUPA_KEY}"
                     """
-                    
+                    // DEBUG: Check if file exists and show its content (without revealing the key)
+                    bat 'if exist .env (echo .env file exists) else (echo .env file NOT FOUND)'
+                    bat 'type .env'
                     // 2. Build the image (No arguments needed!)
                     bat 'docker build --no-cache -t app-dev .'
                 }
