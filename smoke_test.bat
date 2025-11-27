@@ -1,5 +1,5 @@
 @echo off
-curl -s --head http://localhost:8081 | find "200" >nul
+curl -s --head http://localhost:8080 | find "200" >nul
 if %ERRORLEVEL% equ 0 (
     echo Test Passed
     exit /b 0
