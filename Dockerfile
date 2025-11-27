@@ -11,7 +11,8 @@ COPY . .
 # Debug: ensure env file exists
 RUN ls -la .env.production || echo "NO .env.production FOUND"
 
-RUN npm run build
+# NEW: Load .env.production as actual environment variables
+RUN export $(cat .env.production | xargs) && npm run build
 
 # Stage 2: Serve
 FROM nginx:alpine
