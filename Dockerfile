@@ -5,13 +5,8 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# CRITICAL FIX: Remove .env.local so .env.production takes effect
-RUN rm -f .env.local .env
-
-# Now create .env.production (it will be the only .env file)
-# (The file is already copied from Jenkins workspace, but let's verify)
-RUN ls -la .env* || echo "No .env files"
-RUN cat .env.production
+# Debug: Show the .env file
+RUN cat .env || echo "No .env file found"
 
 RUN npm run build
 
