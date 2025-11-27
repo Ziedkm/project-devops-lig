@@ -5,16 +5,13 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# DEBUG: Check if .env.production exists and show its content
-RUN ls -la .env.production || echo "FILE NOT FOUND"
-RUN cat .env.production || echo "CANNOT READ FILE"
+# CRITICAL FIX: Remove .env.local so .env.production takes effect
+RUN rm -f .env.local .env
 
-# CRITICAL FIX: Convert Windows line endings to Unix (CRLF -> LF)
-RUN apk add --no-cache dos2unix
-RUN dos2unix .env.production 2>/dev/null || true
-
-# Show the file again after conversion
-RUN echo "=== After dos2unix ===" && cat .env.production
+# Now create .env.production (it will be the only .env file)
+# (The file is already copied from Jenkins workspace, but let's verify)
+RUN ls -la .env* || echo "No .env files"
+RUN cat .env.production
 
 RUN npm run build
 
