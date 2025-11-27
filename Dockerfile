@@ -8,8 +8,7 @@ RUN npm install
 # Copy source including .env.production created by Jenkins
 COPY . .
 
-# Debug: ensure env file exists
-RUN ls -la .env.production || echo "NO .env.production FOUND"
+
 
 RUN npm run build
 
