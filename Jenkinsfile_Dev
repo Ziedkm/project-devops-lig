@@ -2,10 +2,21 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Setup') {
+            steps {
+                bat 'npm install'
+            }
+        }
 
         stage('Clean Old Container') {
             steps {
-                bat 'docker rm -f dev-app || exit 0'
+                bat 'docker rm -f dev-app || exit /b 0'
             }
         }
 
@@ -16,18 +27,12 @@ pipeline {
                     string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY'),
                     string(credentialsId: 'SUPABASE_SERVICE_KEY', variable: 'SUPA_SERVICE_KEY')
                 ]) {
-
-                    // Create .env.production for Vite
                     powershell """
                 Set-Content -Path .env -Value "VITE_SUPABASE_URL=${SUPA_URL}" -Encoding ASCII
                 Add-Content -Path .env -Value "VITE_SUPABASE_ANON_KEY=${SUPA_KEY}" -Encoding ASCII
                 Add-Content -Path .env -Value "VITE_SUPABASE_SERVICE_KEY=${SUPA_SERVICE_KEY}" -Encoding ASCII
             """
-
-                    // Build Docker image
-                    bat """
-                    docker build --no-cache -t app-dev .
-                    """
+                    bat 'docker build --no-cache -t app-dev .'
                 }
             }
         }
@@ -41,6 +46,13 @@ pipeline {
         stage('Test') {
             steps {
                 bat 'smoke_test.bat'
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                bat 'docker rm -f dev-app || exit /b 0'
+                bat 'docker rmi -f app-dev || exit /b 0'
             }
         }
     }

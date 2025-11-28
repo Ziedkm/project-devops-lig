@@ -2,24 +2,45 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Setup') {
+            steps {
+                bat 'npm install'
+            }
+        }
 
         stage('Build') {
             steps {
                 withCredentials([
                     string(credentialsId: 'SUPABASE_URL', variable: 'SUPA_URL'),
-                    string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY')
+                    string(credentialsId: 'SUPABASE_KEY', variable: 'SUPA_KEY'),
+                    string(credentialsId: 'SUPABASE_SERVICE_KEY', variable: 'SUPA_SERVICE_KEY')
                 ]) {
-
-                    // Generate production env file
                     bat """
                     echo VITE_SUPABASE_URL=%SUPA_URL% > .env.production
                     echo VITE_SUPABASE_ANON_KEY=%SUPA_KEY% >> .env.production
+                    echo VITE_SUPABASE_SERVICE_KEY=%SUPA_SERVICE_KEY% >> .env.production
                     """
-
-                    // Local build for archiving to artifacts
-                    bat 'npm install'
-                    bat 'npm run build'
+                    bat 'docker build --no-cache -t app-release:%BUILD_NUMBER% .'
                 }
+            }
+        }
+
+        stage('Run') {
+            steps {
+                bat 'docker run -d -p 8084:80 --name release-app app-release:%BUILD_NUMBER%'
+                bat 'timeout /t 5'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'curl -s --head http://localhost:8084 | find "200"'
             }
         }
 
@@ -27,6 +48,11 @@ pipeline {
             steps { 
                 archiveArtifacts artifacts: 'dist/**/*', fingerprint: true 
             } 
+        }
+    }
+    post {
+        always {
+            bat 'docker rm -f release-app || exit /b 0'
         }
     }
 }
