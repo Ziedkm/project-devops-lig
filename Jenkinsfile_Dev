@@ -39,13 +39,13 @@ pipeline {
 
         stage('Run') {
             steps {
-                bat 'docker run -d -p 8083:80 --name dev-app app-dev'
+                bat 'docker run -d -p 8082:80 --name dev-app app-dev'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'smoke_test.bat'
+                bat 'smoke_test.bat 8082'
             }
         }
 

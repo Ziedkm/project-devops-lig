@@ -40,7 +40,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                bat 'curl -s --head http://localhost:8084 | find "200"'
+                bat 'smoke_test.bat 8084'
             }
         }
 

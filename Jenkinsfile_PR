@@ -39,7 +39,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                bat 'smoke_test.bat'
+                bat 'smoke_test.bat 8083'
             }
         }
 
